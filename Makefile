@@ -1,6 +1,8 @@
-UDEVDIR=$(DESTDIR)/etc/udev/rules.d
-BINDIR=$(DESTDIR)/usr/local/bin
-ICONDIR=$(DESTDIR)/usr/share/icons
+SHELL := /bin/bash
+
+UDEVDIR = $(DESTDIR)/etc/udev/rules.d
+BINDIR  = $(DESTDIR)/usr/local/bin
+ICONDIR = $(DESTDIR)/usr/share/icons
 
 SRC  = src/batify.sh
 UDEV = 99-$(shell basename $(basename $(SRC))).rules
