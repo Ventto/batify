@@ -46,13 +46,12 @@ Basically:
 
 ```bash
 case ${_bat_capacity} in
-	[0-9])    ntf_lvl=critical; icon="critical" ;;
-	[10-15])  ntf_lvl=low;      icon="low"      ;;
-	[50-60])  ntf_lvl=normal;   icon="half"     ;;
+	[0-9])  ntf_lvl=critical; icon="critical" ;;
+	1[0-5]) ntf_lvl=low;      icon="low"      ;;
 
-	# Custom warnings
-	[n1-n2]) ntf_lvl=[critical | low | normal];   icon="<icon_name>" ;;
-	n) ... ;;
+	# Custom warnings (battery half level)
+	5[0-3]) ntf_lvl=normal; icon="half" ;;
+	50) ... ;;
 
 	*) exit ;;
 esac

@@ -9,9 +9,8 @@ _bat_name="${_udev_params[0]}"
 _bat_capacity="${_udev_params[1]}"
 
 case ${_bat_capacity} in
-	[0-9])    ntf_lvl=critical; icon="critical" ;;
-	[10-15])  ntf_lvl=low;      icon="low"      ;;
-	[50-60])  ntf_lvl=normal;   icon="half"     ;;
+	[0-9])  ntf_lvl=critical; icon="critical" ;;
+	1[0-5]) ntf_lvl=low;      icon="low"      ;;
 	*) exit ;;
 esac
 
