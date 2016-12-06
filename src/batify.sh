@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
 
-export XAUTHORITY="/home/$USER/.Xauthority"
+export XAUTHORITY="/home/${USER}/.Xauthority"
 export DISPLAY="0:0"
-export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$UID/bus"
+
+platform=$(lsb_release -i | awk -F"\t" '{print $2}')
+
+if [ "${platform}" == "Arch" ]; then
+	dbus="path=/run/user/${UID}/bus"
+elif [ "${platform}" == "Ubuntu" ]; then
+	pid=$(pgrep -u $USER nautilus)
+	dbus=$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/${pid}/environ | cut -d ':' -f 2)
+fi
+
+export DBUS_SESSION_BUS_ADDRESS="unix:${dbus}"
 
 _udev_params=( "$@" )
 _bat_name="${_udev_params[0]}"
