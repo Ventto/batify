@@ -1,0 +1,14 @@
+/*
+
+!icons
+icons/
+!icons/*.png
+
+!src
+src/*
+!src/batify.sh
+
+!Makefile
+!LICENSE
+!README.md
+!.gitignore
