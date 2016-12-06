@@ -41,6 +41,8 @@ esac
 
 ## Custom icons
 
+There are basic icons with batify but you can obviously use yours.
+
  * Edit `/usr/local/bin/batify.sh`:
 
  ```
