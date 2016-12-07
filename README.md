@@ -12,7 +12,7 @@ Batify
 
 In order to use libnotify, you have to install a [notification server](https://wiki.archlinux.org/index.php/Desktop_notifications).
 
-## Package
+## Package (AUR)
 
 ```
 $ yaourt -S batify
@@ -30,7 +30,7 @@ $ sudo make install
 **After installing *batify*, do not forget to reload udev rules:**
 
 ```
-$ udevadm control --reload-rules
+$ udevadm control --reload
 ```
 
 # How does it work ?
