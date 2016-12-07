@@ -3,9 +3,18 @@
 export XAUTHORITY="/home/${USER}/.Xauthority"
 export DISPLAY="0:0"
 
-pid=$(pgrep -u $USER dbus-daemon | head -n 1)
-env="/proc/${pid}/environ"
-dbus=$(grep -z DBUS_SESSION_BUS_ADDRESS $env | cut -d ':' -f 2 | tr -d '\0')
+for pid in $(pgrep -u $USER dbus-daemon); do
+	env="/proc/${pid}/environ"
+	dbus=$(grep -z DBUS_SESSION_BUS_ADDRESS $env | cut -d ':' -f 2 | tr -d '\0')
+	if [ -n "${dbus##^unix:*}" ]; then
+		break
+	fi
+done
+
+if [ -z "$dbus" ]; then
+	echo "No dbus-daemon process found."
+	exit 1
+fi
 
 export DBUS_SESSION_BUS_ADDRESS="unix:${dbus}"
 
