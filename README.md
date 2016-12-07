@@ -68,8 +68,15 @@ declare -A ntf_icons
 
 ntf_icons['critical']="/usr/share/icons/batify/battery_critical.png"
 ...
-ntf_icons['my_icon_name']="<path>/my_icon.png"
+
+ntf_icons['myicon']="<path>/myicon.png"
 ```
 
+# FAQ
 
+* Mysteriously, it does not work:
+
+Check on `DBUS_SESSION_BUS_ADDRESS` variable in `/usr/local/bin/batify.sh`
+Your configuration may be an isolated case and the *dbus-daemon* process belonging to `$USER` was
+probably not found.
 
