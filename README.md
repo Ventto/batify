@@ -61,16 +61,9 @@ esac
 
 There are basic icons with batify but you can obviously use yours.
 
- * Edit `/usr/local/bin/batify.sh`:
-
- ```bash
-declare -A ntf_icons
-
-ntf_icons['critical']="/usr/share/icons/batify/battery_critical.png"
-...
-
-ntf_icons['myicon']="<path>/myicon.png"
-```
+* Edit `/usr/local/bin/batify.sh`
+* Set `icon_dir` variable
+* Use `icon` as you please
 
 # FAQ
 
