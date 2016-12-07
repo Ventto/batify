@@ -30,7 +30,7 @@ $ sudo make install
 **After installing *batify*, do not forget to reload udev rules:**
 
 ```
-$ udevadm control --reload
+$ udevadm control --reload-rules
 ```
 
 # How does it work ?
