@@ -13,7 +13,7 @@ $(UDEV):
 	@echo -e 'ACTION=="change", KERNEL=="BAT0", \\' >  $(UDEV)
 	@echo -e 'SUBSYSTEM=="power_supply", \\'        >> $(UDEV)
 	@echo -e 'ATTR{status}=="Discharging", \\'      >> $(UDEV)
-	@echo -n 'RUN+="/usr/bin/su $(USER) -c '        >> $(UDEV)
+	@echo -n 'RUN+="$(shell whereis su | cut -d ' ' -f 2) $(USER) -c '        >> $(UDEV)
 	@echo -e ''\''/usr/local/bin/batify.sh %k $$attr{capacity}'\''"' >> $(UDEV)
 
 install: all
