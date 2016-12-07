@@ -3,14 +3,9 @@
 export XAUTHORITY="/home/${USER}/.Xauthority"
 export DISPLAY="0:0"
 
-platform=$(lsb_release -i | awk -F"\t" '{print $2}')
-
-if [ "${platform}" == "Arch" ]; then
-	dbus="path=/run/user/${UID}/bus"
-elif [ "${platform}" == "Ubuntu" ]; then
-	pid=$(pgrep -u $USER nautilus)
-	dbus=$(grep -z DBUS_SESSION_BUS_ADDRESS /proc/${pid}/environ | cut -d ':' -f 2)
-fi
+pid=$(pgrep -u $USER dbus-daemon | head -n 1)
+env="/proc/${pid}/environ"
+dbus=$(grep -z DBUS_SESSION_BUS_ADDRESS $env | cut -d ':' -f 2 | tr -d '\0')
 
 export DBUS_SESSION_BUS_ADDRESS="unix:${dbus}"
 
