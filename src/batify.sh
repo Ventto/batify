@@ -41,20 +41,26 @@ export DBUS_SESSION_BUS_ADDRESS="unix:${dbus}"
 _udev_params=( "$@" )
 _bat_name="${_udev_params[0]}"
 _bat_capacity="${_udev_params[1]}"
+_bat_plug="${_udev_params[2]}"
 
-case ${_bat_capacity} in
-	[0-9])  ntf_lvl=critical; icon="critical" ;;
-	1[0-5]) ntf_lvl=low;      icon="low"      ;;
-	*) exit ;;
-esac
+if [ "${_bat_plug}" != "none" ]; then
+	if [ "${_bat_plug}" == "1" ]; then
+		ntf_lvl="normal"; icon="bat-plug"
+		ntf_msg="Power: plugged in"
+	else
+		ntf_lvl="normal" ; icon="bat-unplug"
+		ntf_msg="Power: unplugged"
+	fi
+else
+	case ${_bat_capacity} in
+		[0-9])  ntf_lvl="critical"; icon="critical" ;;
+		1[0-5]) ntf_lvl="low";      icon="low"      ;;
+		*) exit ;;
+	esac
+	ntf_msg="[${_bat_name}] - Battery: ${_bat_capacity}%"
+fi
 
-ntf_msg="[${_bat_name}] - Battery: ${_bat_capacity}%"
+icon_dir="/usr/share/icons/batify"
+icon_path="${icon_dir}/${icon}.png"
 
-declare -A ntf_icons
-
-ntf_icons['critical']="/usr/share/icons/batify/battery_critical.png"
-ntf_icons['low']="/usr/share/icons/batify/battery_low.png"
-ntf_icons['normal']="/usr/share/icons/batify/battery_normal.png"
-ntf_icons['half']="/usr/share/icons/batify/battery_half.png"
-
-/usr/bin/notify-send -u ${ntf_lvl} -i "${ntf_icons[$icon]}" "${ntf_msg}"
+/usr/bin/notify-send -u ${ntf_lvl} -i "${icon_path}" "${ntf_msg}"
