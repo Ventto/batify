@@ -25,18 +25,25 @@ export DISPLAY="0:0"
 
 for pid in $(pgrep -u $USER dbus-daemon); do
 	env="/proc/${pid}/environ"
-	dbus=$(grep -z DBUS_SESSION_BUS_ADDRESS $env | cut -d ':' -f 2 | tr -d '\0')
-	if [ -n "${dbus##^unix:*}" ]; then
+	dbus=$(grep -z DBUS_SESSION_BUS_ADDRESS $env | tr -d '\0' | \
+			sed 's/DBUS_SESSION_BUS_ADDRESS=//g')
+	if [ -n $dbus ]; then
 		break
 	fi
 done
 
 if [ -z "$dbus" ]; then
 	echo "No dbus-daemon process found."
-	exit 1
+	env=$(find "${HOME}/.dbus/session-bus/" -maxdepth 1 -type f)
+	if [ -f "${env}" ]; then
+		dbus=$(grep ^DBUS_SESSION_BUS_ADDRESS $env | sed 's/DBUS_SESSION_BUS_ADDRESS=//g')
+	else
+		echo "No session address file found in ${HOME}/.dbus/session-bus"
+		exit 1
+	fi
 fi
 
-export DBUS_SESSION_BUS_ADDRESS="unix:${dbus}"
+export DBUS_SESSION_BUS_ADDRESS=$dbus
 
 _udev_params=( "$@" )
 _bat_name="${_udev_params[0]}"
