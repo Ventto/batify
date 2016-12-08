@@ -4,7 +4,7 @@ Batify
 [![Version](https://img.shields.io/badge/version-0.7-orange.svg?style=flat)](https://github.com/Ventto/batify/)
 [![Language (Bash)](https://img.shields.io/badge/powered_by-Bash-brightgreen.svg)](https://www.gnu.org/software/bash/)
 
-*Batify is an easy way to set battery level warnings using [udev rules](https://wiki.archlinux.org/index.php/Udev) and [libnotify](https://wiki.archlinux.org/index.php/Desktop_notifications).*
+*Batify is an easy way (for single-user system) to set battery level warnings using [udev rules](https://wiki.archlinux.org/index.php/Udev) and [libnotify](https://wiki.archlinux.org/index.php/Desktop_notifications).*
 
 # Install
 
