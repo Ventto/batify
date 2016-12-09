@@ -1,7 +1,7 @@
 Batify
 ====
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/Ventto/batify/blob/master/LICENSE)
-[![Version](https://img.shields.io/badge/version-0.7-orange.svg?style=flat)](https://github.com/Ventto/batify/)
+[![Version](https://img.shields.io/badge/version-0.8-orange.svg?style=flat)](https://github.com/Ventto/batify/)
 [![Language (Bash)](https://img.shields.io/badge/powered_by-Bash-brightgreen.svg)](https://www.gnu.org/software/bash/)
 
 *Batify is an easy way (for single-user system) to set battery level warnings using [udev rules](https://wiki.archlinux.org/index.php/Udev) and [libnotify](https://wiki.archlinux.org/index.php/Desktop_notifications).*
@@ -70,6 +70,6 @@ There are basic icons with batify but you can obviously use yours.
 * Mysteriously, it does not work:
 
 Check on `DBUS_SESSION_BUS_ADDRESS` variable in `/usr/local/bin/batify.sh`
-Your configuration may be an isolated case and the *dbus-daemon* process belonging to `$USER` was
-probably not found.
+Batify can not find the existing bus address on the X display or in a file in
+~/.dbus/session-bus/ to send a X message bus from a shell script.
 
