@@ -20,27 +20,32 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-export XAUTHORITY="/home/${USER}/.Xauthority"
-export DISPLAY="0:0"
+if [ -z "${DISPLAY}" ]; then
+	exit
+fi
 
-for pid in $(pgrep -u $USER dbus-daemon); do
-	env="/proc/${pid}/environ"
-	dbus=$(grep -z DBUS_SESSION_BUS_ADDRESS $env | tr -d '\0' | \
-			sed 's/DBUS_SESSION_BUS_ADDRESS=//g')
-	if [ -n $dbus ]; then
-		break
-	fi
+export XAUTHORITY="/home/${USER}/.Xauthority"
+
+for xclient in $(xlsclients | cut -d ' ' -f 3); do
+	for pid in $(pgrep -u $USER -f $xclient); do
+		env="/proc/${pid}/environ"
+
+		if [ -f "${env}" ]; then
+			! [ -r "${env}" ] && continue
+
+			dbus=$(grep -z DBUS_SESSION_BUS_ADDRESS $env | tr -d '\0' | \
+					sed 's/DBUS_SESSION_BUS_ADDRESS=//g')
+
+			if [ -n $dbus ]; then
+				break
+			fi
+		fi
+	done
 done
 
 if [ -z "$dbus" ]; then
-	echo "No dbus-daemon process found."
-	env=$(find "${HOME}/.dbus/session-bus/" -maxdepth 1 -type f)
-	if [ -f "${env}" ]; then
-		dbus=$(grep ^DBUS_SESSION_BUS_ADDRESS $env | sed 's/DBUS_SESSION_BUS_ADDRESS=//g')
-	else
-		echo "No session address file found in ${HOME}/.dbus/session-bus"
-		exit 1
-	fi
+	echo "No dbus-daemon process found on the X display."
+	exit 1
 fi
 
 export DBUS_SESSION_BUS_ADDRESS=$dbus
