@@ -75,4 +75,4 @@ fi
 icon_dir="/usr/share/icons/batify"
 icon_path="${icon_dir}/${icon}.png"
 
-/usr/bin/notify-send -u ${ntf_lvl} -i "${icon_path}" "${ntf_msg}"
+/usr/bin/notify-send --hint=int:transient:1 -u ${ntf_lvl} -i "${icon_path}" "${ntf_msg}"
