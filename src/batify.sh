@@ -20,40 +20,49 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-if [ -z "${DISPLAY}" ]; then
-	exit
+xtty=$(cat /sys/class/tty/tty0/active)
+xuser=$(who | grep ${xtty}  | head -n1 | cut -d' ' -f1)
+
+if [ -z "${xuser}" ]; then
+    echo "No user found from ${xtty}."
+    exit 1
 fi
 
-export XAUTHORITY="/home/${USER}/.Xauthority"
+xdisplay=$(ps -o command -p $(pgrep Xorg) | grep " vt${xtty:3:${#tty}}" | \
+    grep -o ":[0-9]" | head -n 1)
 
-for xclient in $(xlsclients | cut -d ' ' -f 3); do
-	for pid in $(pgrep -u $USER -f $xclient); do
-		env="/proc/${pid}/environ"
+if [ -z "${xdisplay}" ]; then
+    echo "No X process found from ${xtty}."
+    exit 1
+fi
 
-		if [ -f "${env}" ]; then
-			! [ -r "${env}" ] && continue
-
-			dbus=$(grep -z DBUS_SESSION_BUS_ADDRESS $env | tr -d '\0' | \
-					sed 's/DBUS_SESSION_BUS_ADDRESS=//g')
-
-			if [ -n $dbus ]; then
-				break
-			fi
-		fi
-	done
+for pid in $(ps -u ${xuser} -o pid --no-headers); do
+    env="/proc/${pid}/environ"
+    display=$(grep -z "^DISPLAY=" ${env} | tr -d '\0' | cut -d '=' -f 2)
+    if [ -n "${display}" ]; then
+        dbus=$(grep -z "DBUS_SESSION_BUS_ADDRESS=" ${env} | tr -d '\0' | \
+            sed 's/DBUS_SESSION_BUS_ADDRESS=//g')
+        if [ -n ${dbus} ]; then
+            xauth=$(grep -z "XAUTHORITY=" ${env} | tr -d '\0' | sed 's/XAUTHORITY=//g')
+            break
+        fi
+    fi
 done
 
-if [ -z "$dbus" ]; then
-	echo "No dbus-daemon process found on the X display."
-	exit 1
+if [ -z "${dbus}" ]; then
+    echo "No session bus address found."
+    exit 1
+elif [ -z "${xauth}" ]; then
+    echo "No Xauthority found."
+    exit 1
 fi
-
-export DBUS_SESSION_BUS_ADDRESS=$dbus
 
 _udev_params=( "$@" )
 _bat_name="${_udev_params[0]}"
 _bat_capacity="${_udev_params[1]}"
 _bat_plug="${_udev_params[2]}"
+
+ICON_DIR="/usr/share/icons/batify"
 
 if [ "${_bat_plug}" != "none" ]; then
 	if [ "${_bat_plug}" == "1" ]; then
@@ -65,14 +74,23 @@ if [ "${_bat_plug}" != "none" ]; then
 	fi
 else
 	case ${_bat_capacity} in
-		[0-9])  ntf_lvl="critical"; icon="critical" ;;
-		1[0-5]) ntf_lvl="low";      icon="low"      ;;
+		[0-9])  ntf_lvl="critical"; icon="bat-critical" ;;
+		1[0-5]) ntf_lvl="low";      icon="bat-low"      ;;
 		*) exit ;;
 	esac
 	ntf_msg="[${_bat_name}] - Battery: ${_bat_capacity}%"
 fi
 
-icon_dir="/usr/share/icons/batify"
-icon_path="${icon_dir}/${icon}.png"
+[ -f /usr/bin/su ]  && su_path="/usr/bin/su"
+[ -f /bin/su ]      && su_path="/bin/su" || su_path=
 
-/usr/bin/notify-send --hint=int:transient:1 -u ${ntf_lvl} -i "${icon_path}" "${ntf_msg}"
+if [ -z "$su_path" ]; then
+    echo "'su' command not found."
+    exit 1
+fi
+
+icon_path="${ICON_DIR}/${icon}.png"
+
+DBUS_SESSION_BUS_ADDRESS=${dbus} DISPLAY=${xdisplay} XAUTHORITY=${xauth} \
+${su_path} ${xuser} -c \
+"/usr/bin/notify-send --hint=int:transient:1 -u ${ntf_lvl} -i \"${icon_path}\" \"${ntf_msg}\""
