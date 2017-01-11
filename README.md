@@ -4,13 +4,13 @@ Batify
 [![Version](https://img.shields.io/badge/version-0.9-orange.svg?style=flat)](https://github.com/Ventto/batify/)
 [![Language (Bash)](https://img.shields.io/badge/powered_by-Bash-brightgreen.svg)](https://www.gnu.org/software/bash/)
 
-*Batify is an easy way (for single-user system) to set battery level warnings using [udev rules](https://wiki.archlinux.org/index.php/Udev) and [libnotify](https://wiki.archlinux.org/index.php/Desktop_notifications).*
+*Batify is a Bash script to set easily plug and battery level notifications using [udev rules](https://wiki.archlinux.org/index.php/Udev) and [libnotify](https://wiki.archlinux.org/index.php/Desktop_notifications) for single and multi-xusers.*
 
-# Install
+# Installation
 
 ## Requirements
 
-In order to use libnotify, you have to install a [notification server](https://wiki.archlinux.org/index.php/Desktop_notifications).
+In order to use libnotify, you need to install a [notification server](https://wiki.archlinux.org/index.php/Desktop_notifications).
 
 ## Package (AUR)
 
@@ -33,15 +33,24 @@ $ sudo make install
 $ udevadm control --reload-rules
 ```
 
-# Custom
+# Notifications
 
-*A batifyrc configuration file is comming soon.*
+*"A batifyrc configuration file is comming soon"*
 
-Useful pathes:
+Current notifications:
+
+| notification | level |
+|---|---|
+| Battery level is between 10% and 15% | normal |
+| Battery level is less than 9% | critical |
+| AC adapter plugged-in | normal |
+| AC adapter unplugged | normal |
+
+Batify's files:
 
 * `/etc/udev/rules.d/99-batify.rules`
 * `/usr/local/bin/batify.sh`
-* `/usr/share/icons/batify`
+* `/usr/share/icons/batify/*.png`
 
 
 ## Custom battery warnings
@@ -61,7 +70,7 @@ case ${_bat_capacity} in
 esac
 ```
 
-## Custom plug warnings
+## Custom plug in/unplug notifications
 
 * Edit `batify.sh`:
 
@@ -84,5 +93,4 @@ ICON_DIR="/usr/share/icons/batify"
 #[...]
 icon_path="${ICON_DIR}/${icon}.png"
 ```
-
 
