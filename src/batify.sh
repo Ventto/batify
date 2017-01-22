@@ -21,29 +21,42 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 xtty=$(cat /sys/class/tty/tty0/active)
-xuser=$(who | grep ${xtty}  | head -n1 | cut -d' ' -f1)
+xuser=$(who | grep "${xtty}"  | head -n1 | cut -d' ' -f1)
 
 if [ -z "${xuser}" ]; then
     echo "No user found from ${xtty}."
     exit 1
 fi
 
-xdisplay=$(ps -o command -p $(pgrep Xorg) | grep " vt${xtty:3:${#tty}}" | \
-    grep -o ":[0-9]" | head -n 1)
+echo "----------------------------" >> batify_log
+echo "user $xuser" >> batify_log
+echo "tty $xtty" >> batify_log
 
-if [ -z "${xdisplay}" ]; then
-    echo "No X process found from ${xtty}."
-    exit 1
+xpids=$(pgrep Xorg)
+if [ -n "${xpids}" ]; then
+    xdisplay=$(ps -o command -p "${xpids}" | grep " vt${xtty:3:${#tty}}" | \
+    grep -o ":[0-9]" | head -n 1)
 fi
 
-for pid in $(ps -u ${xuser} -o pid --no-headers); do
+if [ -z "${xdisplay}" ]; then
+    #Trying to get the active display from XWayland
+    xdisplay=$(pgrep -a Xwayland | cut -d" " -f3)
+    if [ -z "${xdisplay}" ]; then
+        echo "No X/XWayland process found from ${xtty}."
+        exit 1
+    fi
+fi
+
+echo "display $xdisplay" >> batify_log
+
+for pid in $(ps -u "${xuser}" -o pid --no-headers); do
     env="/proc/${pid}/environ"
-    display=$(grep -z "^DISPLAY=" ${env} | tr -d '\0' | cut -d '=' -f 2)
+    display=$(grep -z "^DISPLAY=" "${env}" | tr -d '\0' | cut -d '=' -f 2)
     if [ -n "${display}" ]; then
-        dbus=$(grep -z "DBUS_SESSION_BUS_ADDRESS=" ${env} | tr -d '\0' | \
+        dbus=$(grep -z "DBUS_SESSION_BUS_ADDRESS=" "${env}" | tr -d '\0' | \
             sed 's/DBUS_SESSION_BUS_ADDRESS=//g')
-        if [ -n ${dbus} ]; then
-            xauth=$(grep -z "XAUTHORITY=" ${env} | tr -d '\0' | sed 's/XAUTHORITY=//g')
+        if [ -n "${dbus}" ]; then
+            xauth=$(grep -z "XAUTHORITY=" "${env}" | tr -d '\0' | sed 's/XAUTHORITY=//g')
             break
         fi
     fi
@@ -52,7 +65,8 @@ done
 if [ -z "${dbus}" ]; then
     echo "No session bus address found."
     exit 1
-elif [ -z "${xauth}" ]; then
+# XWayland does not need Xauthority 
+elif [ -z "${xauth}" ] && [ -n "$xpids" ]; then
     echo "No Xauthority found."
     exit 1
 fi
@@ -91,6 +105,11 @@ fi
 
 icon_path="${ICON_DIR}/${icon}.png"
 
+echo "dbus $dbus" >> batify_log
+echo "ntf_lvl $ntf_lvl" >> batify_log
+echo "icon path $icon_path" >> batify_log
+echo "ntf_msg $ntf_msg" >> batify_log
+
 DBUS_SESSION_BUS_ADDRESS=${dbus} DISPLAY=${xdisplay} XAUTHORITY=${xauth} \
-${su_path} ${xuser} -c \
+"${su_path}" "${xuser}" -c \
 "/usr/bin/notify-send --hint=int:transient:1 -u ${ntf_lvl} -i \"${icon_path}\" \"${ntf_msg}\""
