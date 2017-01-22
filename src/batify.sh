@@ -28,10 +28,6 @@ if [ -z "${xuser}" ]; then
     exit 1
 fi
 
-echo "----------------------------" >> batify_log
-echo "user $xuser" >> batify_log
-echo "tty $xtty" >> batify_log
-
 xpids=$(pgrep Xorg)
 if [ -n "${xpids}" ]; then
     xdisplay=$(ps -o command -p "${xpids}" | grep " vt${xtty:3:${#tty}}" | \
@@ -46,8 +42,6 @@ if [ -z "${xdisplay}" ]; then
         exit 1
     fi
 fi
-
-echo "display $xdisplay" >> batify_log
 
 for pid in $(ps -u "${xuser}" -o pid --no-headers); do
     env="/proc/${pid}/environ"
@@ -104,11 +98,6 @@ if [ -z "$su_path" ]; then
 fi
 
 icon_path="${ICON_DIR}/${icon}.png"
-
-echo "dbus $dbus" >> batify_log
-echo "ntf_lvl $ntf_lvl" >> batify_log
-echo "icon path $icon_path" >> batify_log
-echo "ntf_msg $ntf_msg" >> batify_log
 
 DBUS_SESSION_BUS_ADDRESS=${dbus} DISPLAY=${xdisplay} XAUTHORITY=${xauth} \
 "${su_path}" "${xuser}" -c \
