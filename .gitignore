@@ -7,6 +7,7 @@ src/*
 !src/batify.sh
 
 !Makefile
+!CONTRIBUTING.md
 !LICENSE
 !README.md
 !.gitignore
