@@ -10,18 +10,18 @@ UDEV    = 99-batify.rules
 all:$(UDEV)
 
 $(UDEV):
-	@echo -e 'ACTION=="change", KERNEL=="BAT0", \\'                       >  $(UDEV)
-	@echo -e 'SUBSYSTEM=="power_supply", \\'                              >> $(UDEV)
-	@echo -e 'ATTR{status}=="Discharging", \\'                            >> $(UDEV)
-	@echo -e 'RUN+="/usr/local/bin/batify.sh %k $$attr{capacity} none"\n' >> $(UDEV)
-	@echo -e 'SUBSYSTEM=="power_supply", ACTION=="change", \\'            >> $(UDEV)
-	@echo -e 'ENV{POWER_SUPPLY_ONLINE}=="0", ENV{POWER}="off", \\'        >> $(UDEV)
-	@echo -e 'OPTIONS+="last_rule", \\'                                   >> $(UDEV)
-	@echo -e 'RUN+="/usr/local/bin/batify.sh none none 0"\n'              >> $(UDEV)
-	@echo -e 'SUBSYSTEM=="power_supply", ACTION=="change", \\'            >> $(UDEV)
-	@echo -e 'ENV{POWER_SUPPLY_ONLINE}=="1", ENV{POWER}="on", \\'         >> $(UDEV)
-	@echo -e 'OPTIONS+="last_rule", \\'                                   >> $(UDEV)
-	@echo -e 'RUN+="/usr/local/bin/batify.sh none none 1"'                >> $(UDEV)
+	@echo -e 'ACTION=="change", KERNEL=="BAT0", \\'                       >  $@
+	@echo -e 'SUBSYSTEM=="power_supply", \\'                              >> $@
+	@echo -e 'ATTR{status}=="Discharging", \\'                            >> $@
+	@echo -e 'RUN+="/usr/local/bin/batify.sh %k $$attr{capacity} none"\n' >> $@
+	@echo -e 'SUBSYSTEM=="power_supply", ACTION=="change", \\'            >> $@
+	@echo -e 'ENV{POWER_SUPPLY_ONLINE}=="0", ENV{POWER}="off", \\'        >> $@
+	@echo -e 'OPTIONS+="last_rule", \\'                                   >> $@
+	@echo -e 'RUN+="/usr/local/bin/batify.sh none none 0"\n'              >> $@
+	@echo -e 'SUBSYSTEM=="power_supply", ACTION=="change", \\'            >> $@
+	@echo -e 'ENV{POWER_SUPPLY_ONLINE}=="1", ENV{POWER}="on", \\'         >> $@
+	@echo -e 'OPTIONS+="last_rule", \\'                                   >> $@
+	@echo -e 'RUN+="/usr/local/bin/batify.sh none none 1"'                >> $@
 
 install: all
 	mkdir -p $(UDEVDIR)
