@@ -51,7 +51,9 @@ for pid in $(ps -u "${xuser}" -o pid --no-headers); do
             sed 's/DBUS_SESSION_BUS_ADDRESS=//g')
         if [ -n "${dbus}" ]; then
             xauth=$(grep -z "XAUTHORITY=" "${env}" | tr -d '\0' | sed 's/XAUTHORITY=//g')
-            break
+            if [ -n "${xauth}" ]; then
+                break
+            fi
         fi
     fi
 done
@@ -59,7 +61,7 @@ done
 if [ -z "${dbus}" ]; then
     echo "No session bus address found."
     exit 1
-# XWayland does not need Xauthority 
+# XWayland does not need Xauthority
 elif [ -z "${xauth}" ] && [ -n "$xpids" ]; then
     echo "No Xauthority found."
     exit 1
