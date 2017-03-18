@@ -3,7 +3,7 @@ SUBSYSTEM=="power_supply", \
 ATTR{status}=="Discharging", \
 ATTR{capacity}=="[0-9]", \
 IMPORT{program}="/usr/bin/xpub", \
-RUN+="/bin/su $env{XUSER} -c 'notify-send -u normal Discharging:$attr{capacity}%'"
+RUN+="/bin/su $env{XUSER} -c 'notify-send -u critical Discharging:$attr{capacity}%'"
 
 ACTION=="change", KERNEL=="BAT0", \
 SUBSYSTEM=="power_supply", \
