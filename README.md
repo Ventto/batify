@@ -2,12 +2,13 @@ Batify
 ====
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/Ventto/batify/blob/master/LICENSE)
 
-*Batify is an udevrule to display plug and critical battery level [notifications](https://wiki.archlinux.org/index.php/Desktop_notifications) (using libnotify)*
+*Batify is an udevrule triggering plug and critical battery level [notifications](https://wiki.archlinux.org/index.php/Desktop_notifications) (using libnotify)*
 
 ## Perks
 
 * [x] **No requirement**: only one udevrule file.
-* [x] **Multi X-sessions support**: using [xpub](https://github.com/Ventto/xpub.git).
+* [x] **Runs notify-send inside**: uses [xpub](https://github.com/Ventto/xpub.git).
+* [x] **Multi X-sessions support**: uses xpub.
 
 # Installation
 
