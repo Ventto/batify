@@ -1,13 +1,9 @@
 /*
 
-!icons
+!xpub
 
-!src
-src/*
-!src/batify.sh
-
+!99-batify.rules
 !Makefile
-!CONTRIBUTING.md
-!LICENSE
 !README.md
 !.gitignore
+!.gitmodules
