@@ -1,13 +1,14 @@
 Batify
 ======
 
-*Batify is an udevrule triggering plug and critical battery level [notifications](https://wiki.archlinux.org/index.php/Desktop_notifications) (using libnotify)*
+*Batify is an udevrule-file triggering plug and critical battery level notifications
+(using libnotify and [xpub](https://github.com/Ventto/xpub))*
 
 ## Perks
 
-* [x] **No requirement**: only one udevrule file.
-* [x] **Runs notify-send inside**: uses [xpub](https://github.com/Ventto/xpub.git).
-* [x] **Multi X-sessions support**: uses xpub.
+* [x] **No requirement**: only one udevrule-file.
+* [x] **No additional script**: runs graphical commands from the rule file.
+* [x] **Multi X-sessions support**: displays notifications on every graphical session.
 
 # Installation
 
@@ -48,7 +49,7 @@ $ udevadm control --reload-rules
 
 ## No battery level warnings displayed
 
-* You might need to replace `BAT0` with your battery name :
+* You might need to replace `BAT0` with your battery identifier:
 
 ```bash
 ACTION=="change", KERNEL=="BAT0", \
