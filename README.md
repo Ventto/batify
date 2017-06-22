@@ -7,7 +7,7 @@ Batify
 ## Perks
 
 * [x] **Minimal**: only one udevrule-file (using *libnotify*).
-* [x] **Everywhere**: displays notifications on the current graphical session (+ XWayland).
+* [x] **Everywhere**: displays notifications on any current graphical session (+ XWayland).
 
 # Installation
 
