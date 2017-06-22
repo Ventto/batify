@@ -6,9 +6,8 @@ Batify
 
 ## Perks
 
-* [x] **No requirement**: only one udevrule-file.
-* [x] **No additional script**: runs graphical commands from the rule file.
-* [x] **Multi X-sessions support**: displays notifications on every graphical session.
+* [x] **Minimal**: only one udevrule-file (using *libnotify*).
+* [x] **Everywhere**: displays notifications on the current graphical session (+ XWayland).
 
 # Installation
 
