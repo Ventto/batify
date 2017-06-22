@@ -29,7 +29,7 @@ $ cd batify
 $ sudo make install
 ```
 
-**After installing *batify*, do not forget to reload udev rules:**
+**Warning: After installing *batify*, do not forget to reload udev rules:**
 
 ```
 $ udevadm control --reload-rules
