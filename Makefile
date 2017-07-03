@@ -15,6 +15,6 @@ install: $(XPUB)
 	cp $(XPUB) $(BINDIR)/xpub
 
 uninstall:
-	$(RM) $(UDEVDIR)/$(UDEVRULE)
+	$(RM) $(UDEVDIR)/$(UDEVRULE) $(BINDIR)/xpub
 
 .PHONY: install uninstall
