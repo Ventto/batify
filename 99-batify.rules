@@ -3,23 +3,23 @@ SUBSYSTEM=="power_supply", \
 ATTR{status}=="Discharging", \
 ATTR{capacity}=="[0-9]", \
 IMPORT{program}="/usr/bin/xpub", \
-RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -u critical Discharging:$attr{capacity}%'"
+RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -a batify -u critical Discharging:$attr{capacity}%'"
 
 ACTION=="change", KERNEL=="BAT0", \
 SUBSYSTEM=="power_supply", \
 ATTR{status}=="Discharging", \
 ATTR{capacity}=="1[0-9]", \
 IMPORT{program}="/usr/bin/xpub", \
-RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -u normal Discharging:$attr{capacity}%'"
+RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -a batify -u normal Discharging:$attr{capacity}%'"
 
 SUBSYSTEM=="power_supply", ACTION=="change", \
 ENV{POWER_SUPPLY_ONLINE}=="0", ENV{POWER}="off", \
 OPTIONS+="last_rule", \
 IMPORT{program}="/usr/bin/xpub", \
-RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -u low UnPlugged'"
+RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -a batify -u low UnPlugged'"
 
 SUBSYSTEM=="power_supply", ACTION=="change", \
 ENV{POWER_SUPPLY_ONLINE}=="1", ENV{POWER}="on", \
 OPTIONS+="last_rule", \
 IMPORT{program}="/usr/bin/xpub", \
-RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -u low PluggedIn'"
+RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -a batify -u low PluggedIn'"
