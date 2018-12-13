@@ -16,10 +16,10 @@ SUBSYSTEM=="power_supply", ACTION=="change", \
 ENV{POWER_SUPPLY_ONLINE}=="0", ENV{POWER}="off", \
 OPTIONS+="last_rule", \
 IMPORT{program}="/usr/bin/xpub", \
-RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -a batify -u low UnPlugged'"
+RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -a batify -u low Discharging'"
 
 SUBSYSTEM=="power_supply", ACTION=="change", \
 ENV{POWER_SUPPLY_ONLINE}=="1", ENV{POWER}="on", \
 OPTIONS+="last_rule", \
 IMPORT{program}="/usr/bin/xpub", \
-RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -a batify -u low PluggedIn'"
+RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -a batify -u low Charging'"
