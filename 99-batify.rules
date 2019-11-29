@@ -3,23 +3,23 @@ SUBSYSTEM=="power_supply", \
 ATTR{status}=="Discharging", \
 ATTR{capacity}=="[0-9]", \
 IMPORT{program}="/usr/bin/xpub", \
-RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -a batify -u critical Discharging:$attr{capacity}%'"
+RUN+="/bin/su $env{XUSER} -c 'notify-send -u critical -i battery-empty \"Battery status\" \"Battery level is CRITICAL at $attr{capacity}%\"'"
 
 ACTION=="change", KERNEL=="BAT0", \
 SUBSYSTEM=="power_supply", \
 ATTR{status}=="Discharging", \
 ATTR{capacity}=="1[0-5]", \
 IMPORT{program}="/usr/bin/xpub", \
-RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -a batify -u normal Discharging:$attr{capacity}%'"
+RUN+="/bin/su $env{XUSER} -c 'notify-send -u normal -i battery-caution \"Battery status\" \"Battery is getting low at $attr{capacity}%\"'"
 
 SUBSYSTEM=="power_supply", ACTION=="change", \
 ENV{POWER_SUPPLY_ONLINE}=="0", ENV{POWER}="off", \
 OPTIONS+="last_rule", \
 IMPORT{program}="/usr/bin/xpub", \
-RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -a batify -u low Discharging'"
+RUN+="/bin/su $env{XUSER} -c 'notify-send -u low -i battery-missing \"Battery status\" \"Charging cable has been unplugged.\"'"
 
 SUBSYSTEM=="power_supply", ACTION=="change", \
 ENV{POWER_SUPPLY_ONLINE}=="1", ENV{POWER}="on", \
 OPTIONS+="last_rule", \
 IMPORT{program}="/usr/bin/xpub", \
-RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -a batify -u low Charging'"
+RUN+="/bin/su $env{XUSER} -c 'notify-send -u low -i battery-full-charging \"Battery status\" \"Charging cable is now plugged.\"'"
