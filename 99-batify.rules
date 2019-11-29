@@ -8,7 +8,7 @@ RUN+="/bin/su $env{XUSER} -c 'notify-send -u critical -i battery-empty \"Battery
 ACTION=="change", KERNEL=="BAT[0-9]", \
 SUBSYSTEM=="power_supply", \
 ATTR{status}=="Discharging", \
-ATTR{capacity}=="1[0-5]", \
+ATTR{capacity}=="1[0-9]", \
 IMPORT{program}="/usr/bin/xpub", \
 RUN+="/bin/su $env{XUSER} -c 'notify-send -u normal -i battery-caution \"Battery status\" \"Battery is getting low at $attr{capacity}%\"'"
 
