@@ -40,7 +40,7 @@ $ udevadm control --reload-rules
 
 | Description | Level |
 |---|---|
-| Battery level is between 10% and 15% | normal |
+| Battery level is between 10% and 19% | normal |
 | Battery level is less or equal to 9% | critical |
 | AC adapter plugged-in | low |
 | AC adapter unplugged | low |
