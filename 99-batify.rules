@@ -8,7 +8,7 @@ RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -a batify -u critical Dischar
 ACTION=="change", KERNEL=="BAT0", \
 SUBSYSTEM=="power_supply", \
 ATTR{status}=="Discharging", \
-ATTR{capacity}=="1[0-5]", \
+ATTR{capacity}=="1[0-9]", \
 IMPORT{program}="/usr/bin/xpub", \
 RUN+="/bin/su $env{XUSER} -c '/usr/bin/notify-send -a batify -u normal Discharging:$attr{capacity}%'"
 
